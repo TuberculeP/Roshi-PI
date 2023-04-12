@@ -16,9 +16,31 @@ roshi = TextToAction()  # Let's introduce our new friend, roshi, master of Turtl
 @roshi.assign_status_behavior()
 def status_behavior(status):
     if status:
-        t.fillcolor("blue")
+        t.fillcolor("green")
     else:
         t.fillcolor("black")
+
+
+@roshi.map("recule")
+def back():
+    t.backward(100)
+
+
+@roshi.map("avance")
+def fw():
+    t.forward(100)
+
+
+@roshi.map("tourne")
+class Rotate:
+
+    @roshi.map("gauche")
+    def left(self):
+        t.left(90)
+
+    @roshi.map("droite")
+    def right(self):
+        t.right(90)
 
 
 @roshi.map("dessine")

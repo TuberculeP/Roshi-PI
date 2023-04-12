@@ -55,7 +55,7 @@ class Jarvis:
         def decorator(func):
             if inspect.isclass(func):
                 self.__mapped_tree[key] = {}
-                self.__categories[func.__name__] = key
+                self.__categories[key] = func
                 # for methods in class
                 for name, method in inspect.getmembers(func, predicate=inspect.isfunction):
                     print(name)
@@ -104,12 +104,10 @@ class Jarvis:
                                     if sub_key in entry.lower():
                                         print("> method " + sub_key + " in category " + key)
                                         #  then it's a method, we need to construct the class
-                                        the_class = self.__categories[type(sub_associated).__name__]()
-                                        the_class.associated()
-                                        print("> Executing " + sub_associated.__name__
-                                              + " in " + the_class.__name__ + " class")
-
-
+                                        #  get class name
+                                        instance = self.__categories[key]()
+                                        method = getattr(instance, sub_associated.__name__)
+                                        method()
 
                             else:
                                 associated()
