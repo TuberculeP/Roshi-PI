@@ -13,7 +13,7 @@ def default_behavior(status):
         print("> Not listening...")
 
 
-class Jarvis:
+class Jarjar:
     """Jarvis is a class that allows you to create a voice assistant."""
 
     # Langs shortcuts

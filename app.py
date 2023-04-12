@@ -1,4 +1,4 @@
-from Classes import Jarvis as TextToAction
+from Classes import Jarjar
 import turtle as t
 
 # Turtle setup
@@ -10,7 +10,7 @@ t.speed(0)
 t.showturtle()
 t.penup()
 
-roshi = TextToAction(TextToAction.LANG_FR)  # Let's introduce our new friend, roshi, master of Turtles
+roshi = Jarjar(Jarjar.LANG_FR)  # Let's introduce our new friend, roshi, master of Turtles
 
 
 @roshi.assign_status_behavior()
