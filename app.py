@@ -16,48 +16,34 @@ roshi = TextToAction()  # Let's introduce our new friend, roshi, master of Turtl
 @roshi.assign_status_behavior()
 def status_behavior(status):
     if status:
-        t.pencolor("red")
+        t.fillcolor("blue")
     else:
-        t.pencolor("black")
+        t.fillcolor("black")
 
 
-roshi.register_category("dis")  # To print stuff on the console
-roshi.register_category("dessine")  # To draw stuff on the screen
-roshi.register_category("tourne")  # To draw stuff on the screen
+@roshi.map("dessine")
+class Draw:
+
+    @roshi.map("carré")
+    def square(self):
+        t.pendown()
+        for _ in range(4):
+            t.forward(100)
+            t.left(90)
+        t.penup()
+
+    @roshi.map("triangle")
+    def triangle(self):
+        t.pendown()
+        for _ in range(3):
+            t.forward(100)
+            t.left(120)
+        t.penup()
 
 
-@roshi.map(key="bonjour", category="dis")
-def hi():
-    print("Hello World")
-
-
-@roshi.map(key="avance")
-def forward():
-    t.forward(100)
-
-
-@roshi.map(key="recule")
-def backward():
-    t.backward(100)
-
-
-@roshi.map(key="droite", category="tourne")
-def right():
-    t.right(90)
-
-
-@roshi.map(key="gauche", category="tourne")
-def left():
-    t.left(90)
-
-
-@roshi.map(key="carré", category="dessine")
-def draw_square():
-    t.pendown()
-    for i in range(4):
-        t.forward(100)
-        t.right(90)
-    t.penup()
+@roshi.map("test")
+def test():
+    print("test")
 
 
 roshi.run()
