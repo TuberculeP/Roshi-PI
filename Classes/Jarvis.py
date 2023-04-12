@@ -1,10 +1,22 @@
 from speech_recognition import Recognizer, Microphone
 
 
+def default_behavior(status):
+    """Default behavior for the status of the Jarvis instance.
+    :param status: bool
+    """
+    if status:
+        print("> Listening...")
+    else:
+        print("> Not listening...")
+
+
 class Jarvis:
     """Jarvis is a class that allows you to create a voice assistant."""
-    def __init__(self, active=True):
-        self.active = active
+
+    def __init__(self):
+        self.active = True
+        self.status_behavior = default_behavior
         self.recognizer = Recognizer()
         self.mapped_commands = {}
         print("> Recognizer online")
@@ -25,8 +37,9 @@ class Jarvis:
         with self.microphone as source:
             self.recognizer.adjust_for_ambient_noise(source)
             self.recognizer.pause_threshold = 0.7
-            print("...")
+            self.status_behavior(True)
             audio = self.recognizer.listen(source)
+            self.status_behavior(False)
             try:
                 print("> Recieved audio")
                 result = self.recognizer.recognize_google(audio, language="fr-FR")
@@ -41,12 +54,14 @@ class Jarvis:
         :param category: str (optional)
         :return: function
         """
+
         def decorator(func):
             if category is None:
                 self.mapped_commands[key] = func
             else:
                 self.mapped_commands[category][key] = func
             return func
+
         return decorator
 
     def register_category(self, name):
@@ -54,6 +69,14 @@ class Jarvis:
         :param name: Category
         """
         self.mapped_commands[name] = {}
+
+    def assign_status_behavior(self):
+        """Assign a custom behavior to the status of the Jarvis instance."""
+        def decorator(func):
+            self.status_behavior = func
+            return func
+
+        return decorator
 
     def run(self):
         print("Jarvis is running...")
