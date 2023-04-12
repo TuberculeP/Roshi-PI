@@ -10,7 +10,7 @@ t.speed(0)
 t.showturtle()
 t.penup()
 
-roshi = TextToAction()  # Let's introduce our new friend, roshi, master of Turtles
+roshi = TextToAction(TextToAction.LANG_FR)  # Let's introduce our new friend, roshi, master of Turtles
 
 
 @roshi.assign_status_behavior()
@@ -61,11 +61,6 @@ class Draw:
             t.forward(100)
             t.left(120)
         t.penup()
-
-
-@roshi.map("test")
-def test():
-    print("test")
 
 
 roshi.run()

@@ -16,8 +16,13 @@ def default_behavior(status):
 class Jarvis:
     """Jarvis is a class that allows you to create a voice assistant."""
 
-    def __init__(self):
+    # Langs shortcuts
+    LANG_FR = "fr-FR"
+    LANG_US = "en-US"
+
+    def __init__(self, lang=LANG_FR):
         self.__active = True
+        self.__lang = lang
         self.__status_behavior = default_behavior
         self.__recognizer = Recognizer()
         self.__mapped_tree = {}  # key -> func
@@ -39,7 +44,7 @@ class Jarvis:
             self.__status_behavior(False)
             try:
                 print("> Recieved audio")
-                result = self.__recognizer.recognize_google(audio, language="fr-FR")
+                result = self.__recognizer.recognize_google(audio, language=self.__lang)
                 return result
             except Exception as e:
                 print("> Please try again. Error: " + str(e))
