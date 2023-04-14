@@ -63,11 +63,12 @@ Il est possible de changer ce comportement par défaut avec la méthode :
 from Jarjar import Jarjar
 import turtle as t
 
-app = Jarjar() 
+app = Jarjar()
+
 
 # Voici un exemple d'override avec turtle
 
-@app .assign_status_behavior()
+@app.override_status_behavior()
 def status_behavior(status):
     if status:
         t.fillcolor("green")

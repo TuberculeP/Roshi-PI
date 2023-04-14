@@ -1,4 +1,6 @@
 import inspect
+import re
+from num2words import num2words
 
 from speech_recognition import Recognizer, Microphone
 
@@ -20,14 +22,17 @@ class Jarjar:
     LANG_FR = "fr-FR"
     LANG_US = "en-US"
 
-    def __init__(self, lang=LANG_FR):
+    def __init__(self, lang=LANG_FR, phrase_time_limit=5, pause_treshold=0.7):
         self.__active = True
         self.__lang = lang
         self.__status_behavior = default_behavior
         self.__recognizer = Recognizer()
+        self.__recognizer.pause_threshold = pause_treshold
+        self.__phrase_time_limit = phrase_time_limit
         self.__mapped_tree = {}  # key -> func
         self.__mapped = {}  # func.__name__ -> key
         self.__categories = {}  # class.__name__ -> key
+        self.__valued = {}  # func.__name__ -> key
         print("> Recognizer online")
         self.__microphone = Microphone()
         print("> Microphone online")
@@ -38,9 +43,8 @@ class Jarjar:
         """
         with self.__microphone as source:
             self.__recognizer.adjust_for_ambient_noise(source)
-            self.__recognizer.pause_threshold = 0.7
             self.__status_behavior(True)
-            audio = self.__recognizer.listen(source)
+            audio = self.__recognizer.listen(source, phrase_time_limit=self.__phrase_time_limit)
             self.__status_behavior(False)
             try:
                 print("> Recieved audio")
@@ -50,13 +54,14 @@ class Jarjar:
                 print("> Please try again. Error: " + str(e))
                 return None
 
-    def map(self, key, sub=False):
+    def map(self, key, param_trigger=None):
         """Map a function or a class to a key.
         Mapped funcs in Mapped Classes will be executed if the class key is in the entry.
         :param key: str
-        :param category: str (optional)
+        :param param_trigger: list (optional)
         :return: function
         """
+
         def decorator(func):
             if inspect.isclass(func):
                 self.__mapped_tree[key] = {}
@@ -73,12 +78,14 @@ class Jarjar:
                 self.__mapped_tree[key] = func
                 self.__mapped[func.__name__] = key
                 func.jarvis_map = True
+                if param_trigger is not None:
+                    self.__valued[func.__name__] = param_trigger
 
             return func
 
         return decorator
 
-    def assign_status_behavior(self):
+    def override_status_behavior(self):
         """Assign a custom behavior to the status of the Jarvis instance."""
 
         def decorator(func):
@@ -92,6 +99,8 @@ class Jarjar:
         print(self.__mapped_tree)
         print("> All categories found :")
         print(self.__categories)
+        print("> All valued functions found :")
+        print(self.__valued)
         print("Jarvis is running...")
         try:
             while self.__active:
@@ -111,10 +120,48 @@ class Jarjar:
                                         #  then it's a method, we need to construct the class
                                         #  get class name
                                         instance = self.__categories[key]()
-                                        method = getattr(instance, sub_associated.__name__)
-                                        method()
+                                        self.exec(getattr(instance, sub_associated.__name__), entry)
 
                             else:
-                                associated()
+                                print("> function " + key)
+                                self.exec(associated, entry)
         except KeyboardInterrupt:
             print("Bye")
+
+    def exec(self, func, entry):
+        """Execute a function.
+        :param func: function
+        :param entry: str
+        """
+        if func.__name__ in self.__valued:
+            # get key
+            params = self.__valued[func.__name__]
+
+            values = []
+
+            # foreach params, we seek for param in entry, then get the number before
+            for param in params:
+                if param in entry:
+                    # get the index of the param
+                    index = entry.index(param)
+                    # get the number at index -1 (skip spaces)
+                    number = ""
+                    while entry[index - 1] == " ":
+                        index -= 1
+                    while entry[index - 1].isdigit():
+                        number = entry[index - 1] + number
+                        index -= 1
+                    # convert to int
+                    number = int(number)
+                    # add to values
+                    values.append(number)
+
+            # if we have values
+            if len(values) > 0:
+                # execute function with values as params
+                func(*values)
+            else:
+                func()
+
+        else:
+            func()
