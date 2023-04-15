@@ -1,17 +1,6 @@
+from jarjar.utils import m2c, default_behavior
 import inspect
-from mot2chiffre import mot2chiffre
 from speech_recognition import Recognizer, Microphone
-
-assert(mot2chiffre("un") == 1)
-
-def default_behavior(status):
-    """Default behavior for the status of the Jarvis instance.
-    :param status: bool
-    """
-    if status:
-        print("> Listening...")
-    else:
-        print("> Not listening...")
 
 
 class Jarjar:
@@ -21,12 +10,12 @@ class Jarjar:
     LANG_FR = "fr-FR"
     LANG_US = "en-US"
 
-    def __init__(self, lang=LANG_FR, phrase_time_limit=5, pause_treshold=0.7):
+    def __init__(self, lang=LANG_FR, phrase_time_limit=5, pause_threshold=0.7):
         self.__active = True
         self.__lang = lang
         self.__status_behavior = default_behavior
         self.__recognizer = Recognizer()
-        self.__recognizer.pause_threshold = pause_treshold
+        self.__recognizer.pause_threshold = pause_threshold
         self.__phrase_time_limit = phrase_time_limit
         self.__mapped_tree = {}  # key -> func
         self.__mapped = {}  # func.__name__ -> key
@@ -174,7 +163,7 @@ class Jarjar:
                             word = entry[index - 1] + word
                             index -= 1
                         # convert to int
-                        number = mot2chiffre(word)
+                        number = m2c(word)
                         # add to values
                         values.append(number)
 

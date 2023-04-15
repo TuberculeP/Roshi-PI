@@ -1,6 +1,5 @@
 from jarjar import Jarjar
 import turtle as t
-from jarjar import mot2chiffre
 
 # Turtle setup
 
@@ -11,7 +10,7 @@ t.speed(0)
 t.showturtle()
 t.penup()
 
-roshi = Jarjar(Jarjar.LANG_FR)  # Let's introduce our new friend, roshi, master of Turtles
+roshi = Jarjar()
 
 
 @roshi.override_status_behavior()
