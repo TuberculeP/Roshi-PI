@@ -1,9 +1,8 @@
 import inspect
-import re
-from num2words import num2words
-
+from mot2chiffre import mot2chiffre
 from speech_recognition import Recognizer, Microphone
 
+assert(mot2chiffre("un") == 1)
 
 def default_behavior(status):
     """Default behavior for the status of the Jarvis instance.
@@ -56,7 +55,7 @@ class Jarjar:
 
     def map(self, key, param_trigger=None):
         """Map a function or a class to a key.
-        Mapped funcs in Mapped Classes will be executed if the class key is in the entry.
+        Mapped main.py in Mapped jarjar will be executed if the class key is in the entry.
         :param key: str
         :param param_trigger: list (optional)
         :return: function
@@ -161,7 +160,30 @@ class Jarjar:
                 # execute function with values as params
                 func(*values)
             else:
-                func()
+                # try to see if the word before the param is a number written in letters
+                # to do so, we pass the word before the param to mot2chiffre
+                for param in params:
+                    if param in entry:
+                        # get the index of the param
+                        index = entry.index(param)
+                        # get the word before the param
+                        word = ""
+                        while entry[index - 1] == " ":
+                            index -= 1
+                        while entry[index - 1].isalpha():
+                            word = entry[index - 1] + word
+                            index -= 1
+                        # convert to int
+                        number = mot2chiffre(word)
+                        # add to values
+                        values.append(number)
+
+                # if we have values
+                if len(values) > 0:
+                    # execute function with values as params
+                    func(*values)
+                else:
+                    func()
 
         else:
             func()

@@ -1,5 +1,6 @@
-from Classes import Jarjar
+from jarjar import Jarjar
 import turtle as t
+from jarjar import mot2chiffre
 
 # Turtle setup
 
