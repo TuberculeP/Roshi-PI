@@ -1,14 +1,28 @@
 from jarjar import Jarjar
-import turtle as t
+import turtle
+import tkinter as tk
 
 # Turtle setup
+root = tk.Tk()
+root.geometry("500x500")
+root.title("Roshi : Master of Turtles")
+root.resizable(False, False)
 
-t.setup(500, 500)
-t.bgcolor("white")
+button = tk.Button(root, text="Quit", command=root.destroy)
+button.pack()
+
+canvas = tk.Canvas(root, width=400, height=400)
+canvas.pack()
+
+t = turtle.RawTurtle(canvas)
+t.shape("turtle")
+
 t.pencolor("black")
 t.speed(0)
 t.showturtle()
 t.penup()
+
+
 
 roshi = Jarjar()
 
@@ -92,3 +106,4 @@ class Color:
         default_color = "blue"
 
 roshi.run()
+root.mainloop()

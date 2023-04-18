@@ -96,6 +96,7 @@ class Jarjar:
                     print('Entry : "' + entry + '"')
                     if "stop" in entry.lower():
                         print("> Stopping...")
+                        self.__active = False
                         break
                     for key, associated in self.__mapped_tree.items():
                         if key in entry.lower():
@@ -176,3 +177,6 @@ class Jarjar:
 
         else:
             func()
+
+    def get_active(self):
+        return self.__active
