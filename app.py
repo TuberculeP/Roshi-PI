@@ -12,13 +12,14 @@ t.penup()
 
 roshi = Jarjar()
 
+default_color = "black"
 
 @roshi.override_status_behavior()
 def status_behavior(status):
     if status:
         t.fillcolor("green")
     else:
-        t.fillcolor("black")
+        t.fillcolor(default_color)
 
 
 @roshi.map("recule")
@@ -70,5 +71,24 @@ class Draw:
             t.left(360/c)
         t.penup()
 
+@roshi.map("couleur")
+class Color:
+    @roshi.map("noir")
+    def switchBlack(self):
+        t.pencolor("black")
+        global default_color
+        default_color = "black"
+
+    @roshi.map("rouge")
+    def switchRed(self):
+        t.pencolor("red")
+        global default_color
+        default_color = "red"
+
+    @roshi.map("bleu")
+    def switchBlue(self):
+        t.pencolor("blue")
+        global default_color
+        default_color = "blue"
 
 roshi.run()
