@@ -14,6 +14,7 @@ class Jarjar:
         self.__active = True
         self.__lang = lang
         self.__status_behavior = default_behavior
+        self.__stop_behavior = None
         self.__recognizer = Recognizer()
         self.__recognizer.pause_threshold = pause_threshold
         self.__phrase_time_limit = phrase_time_limit
@@ -82,6 +83,16 @@ class Jarjar:
 
         return decorator
 
+
+    def override_quit_behavior(self):
+        """Assign a custom behavior when run is done."""
+
+        def decorator(func):
+            self.__stop_behavior = func
+            return func
+
+        return decorator
+
     def run(self):
         print("> All functions found :")
         print(self.__mapped_tree)
@@ -90,6 +101,7 @@ class Jarjar:
         print("> All valued functions found :")
         print(self.__valued)
         print("Jarvis is running...")
+        self.__active = True
         try:
             while self.__active:
                 if (entry := self.__listen()) is not None:
@@ -97,6 +109,8 @@ class Jarjar:
                     if "stop" in entry.lower():
                         print("> Stopping...")
                         self.__active = False
+                        if self.__stop_behavior is not None:
+                            self.__stop_behavior()
                         break
                     for key, associated in self.__mapped_tree.items():
                         if key in entry.lower():
@@ -178,5 +192,5 @@ class Jarjar:
         else:
             func()
 
-    def get_active(self):
+    def get_status(self):
         return self.__active

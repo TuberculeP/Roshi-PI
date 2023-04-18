@@ -7,14 +7,37 @@ root = tk.Tk()
 root.geometry("500x500")
 root.title("Roshi : Master of Turtles")
 root.resizable(False, False)
-
+roshi = Jarjar()
 button = tk.Button(root, text="Quit", command=root.destroy)
 button.pack()
+
+
+
+
+
+
+
 
 canvas = tk.Canvas(root, width=400, height=400)
 canvas.pack()
 
+var = tk.StringVar()
+var.set("Online")
+label = tk.Label(root, textvariable=var)
+label.pack()
+
 t = turtle.RawTurtle(canvas)
+
+
+def lancement():
+    if not roshi.get_status():
+        var.set("Online")
+        roshi.run()
+
+
+Relance = tk.Button(root, text='relancer', command=lancement)
+
+
 t.shape("turtle")
 
 t.pencolor("black")
@@ -24,8 +47,6 @@ t.penup()
 
 
 
-roshi = Jarjar()
-
 default_color = "black"
 
 @roshi.override_status_behavior()
@@ -34,6 +55,11 @@ def status_behavior(status):
         t.fillcolor("green")
     else:
         t.fillcolor(default_color)
+
+@roshi.override_quit_behavior()
+def onQuit():
+    var.set('Offline')
+    Relance.pack()
 
 
 @roshi.map("recule")
@@ -104,6 +130,8 @@ class Color:
         t.pencolor("blue")
         global default_color
         default_color = "blue"
+
+
 
 roshi.run()
 root.mainloop()
