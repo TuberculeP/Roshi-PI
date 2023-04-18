@@ -36,7 +36,7 @@ def lancement():
 
 
 Relance = tk.Button(root, text='relancer', command=lancement)
-
+Relance.configure( font=('Helvetica', 12), bd=4, relief='flat', highlightthickness=0, padx=10, pady=5, )
 
 t.shape("turtle")
 
