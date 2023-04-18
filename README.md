@@ -10,6 +10,7 @@ Elle tourne grâce à **Jarjar 1**, un framework Speech-To-Function fait maison.
 - PiP
 - SpeechRegognition : `pip install SpeechRecognition`
 - PyAudio : `pip install PyAudio`
+- Tkinter : `pip install tk`
 - Turtle Graphics (inclus avec Python3)
 - Un microphone
 
